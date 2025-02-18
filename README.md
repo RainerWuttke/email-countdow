@@ -26,6 +26,6 @@ This is all the steps to use it properly, but consider the backend steps are'nt 
 - Gif creation
 
 ## Future updates
-[ ] Generate a fully working frontend to be easier to configure the gif
-[ ] Generate a better structure and refine the code
-[ ] Turn the code fully english
+- Generate a fully working frontend to be easier to configure the gif
+- Generate a better structure and refine the code
+- Turn the code fully english
