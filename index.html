@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown generator</title>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+    body {
+        display: flex;
+        justify-content: center;
+
+        font-family: 'Oswald', serif;
+    }
+    main {
+        width: clamp(600px, 100%, 800px);
+    }
+    h2 {
+        margin: 1rem 0 .4rem 0;
+    }
+    h3 {
+        margin: 1rem 0 .4rem 0;
+    }
+
+    .flex {
+        display: flex;
+    }
+    .flex.center {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #canvas {
+        border: solid 2px black;
+        min-height: 150px;
+        width: 600px;
+    }
+
+    form {
+        margin-top: 2rem;
+    }
+    form section {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: .6rem;
+    }
+    form section > div {        
+        width: 100%;
+    }
+        form section > div
+    .fr1 {
+        grid-column: span 1;
+    }
+    .fr2 {
+        grid-column: span 2;
+    }
+    .fr3 {
+        grid-column: span 3;
+    }
+    .fr4 {
+        grid-column: span 4;
+    }
+
+    input {
+        width: calc(100% - 2rem);
+
+        padding: .2rem .8rem;
+
+        border: solid 2px black;
+        border-radius: .4rem;
+
+        transition: all .2s;
+
+        font-family: 'Oswald', serif;
+        font-size: .95rem;
+    }
+        input:focus-visible {
+            outline: none;
+            border-color: #307bb5;
+            color: #307bb5;
+        }
+        input[type=date]:focus-visible::-webkit-calendar-picker-indicator {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="%23307bb5" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>');
+        }
+        input[type=time]:focus-visible::-webkit-calendar-picker-indicator {
+            filter: invert(42%) sepia(13%) saturate(3207%) hue-rotate(170deg) brightness(95%) contrast(80%);
+        }
+        input::selection {
+            background-color: white;
+            color: black;
+        }
+
+    label {
+        position: absolute;
+        margin: .2rem 0 0 1rem;
+        padding: 0 .2rem;
+
+        transition: all .2s;
+    }
+        label:not(:has(+ input:placeholder-shown)) {
+            font-size: 10px;
+            margin-top: -8px;
+            background-color: white;
+        }
+        label:has(+ input:focus-visible) {
+            font-size: 10px;
+            margin-top: -8px;
+            background-color: white;
+            color: #307bb5;
+        }
+        label:has(+ input[type=color]) {
+            margin-top: 2px;
+            background-color: transparent;
+            color: white;
+            font-size: 14px;
+        }
+
+    input[type=color] {
+        padding: 0;
+    }
+    input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+    input[type="color"]::-webkit-color-swatch {
+        border: none;
+    }
+
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+<body>
+    <main>
+        <div class="flex center">
+            <h2>Geração do contador</h2>
+            <div id="canvas"></div>
+        </div>
+
+        <form action="">
+            <h3>Informações gerais</h3>
+            <section>
+                <div class="fr1">
+                    <label for="dataFinal">Data Final</label>
+                    <input type="date" id="dataFinal">
+                </div>
+                <div class="fr1">
+                    <label for="tempoFinal">Tempo Final</label>
+                    <input type="time" id="tempoFinal">
+                </div>
+            </section>
+
+            <h3>Fonte</h3>
+            <section>
+                <div class="fr3">
+                    <label for="urlFonte">URL da fonte</label>
+                    <input type="text" id="urlFonte" placeholder=" ">
+                </div>
+                <div class="fr1">
+                    <label for="tamanhoFonte">Tamanho da fonte</label>
+                    <input type="number" id="tamanhoFonte" placeholder=" ">
+                </div>
+                <div class="fr1">
+                    <label for="">Cor da fonte</label>
+                    <input type="color" id="corFonte">
+                </div>
+            </section>
+
+            <h3>Fundo</h3>
+            <section>
+                <div class="fr1">
+                    <label for="">Cor de fundo</label>
+                    <input type="color" id="corFundo">
+                </div>
+                <div class="fr3">
+                    <label for="">Imagem de fundo</label>
+                    <input type="text" placeholder=" " cor="imagemFundo">
+                </div>
+            </section>
+
+        </form>
+    </main>
+</body>
+
+<script>
+
+let canvas = document.getElementById('canvas');
+
+let dataFinal = document.getElementById('dataFinal');
+let tempoFinal = document.getElementById('tempoFinal');
+let urlFonte = document.getElementById('urlFonte');
+let tamanhoFonte = document.getElementById('tamanhoFonte');
+let corFonte = document.getElementById('corFonte');
+let corFundo = document.getElementById('corFundo');
+let imagemFundo = document.getElementById('imagemFundo');
+
+document.querySelectorAll('input').forEach((elem) => {
+    elem.setAttribute('onchange', 'setCountdown()');
+});
+
+function setCountdown() {
+    // console.log(dataFinal.value);
+
+    console.log(canvas);
+    
+    canvas.style.backgroundColor = corFundo.value;
+    
+}
+</script>
+
+</html>

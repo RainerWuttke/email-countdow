@@ -1,0 +1,38 @@
+%!PS-Adobe-3.0
+save
+/showpage { } def
+%%EndComments
+%%BeginDocument
+/S { show } bind def
+/P { moveto show } bind def
+/M { moveto } bind def
+/X { 0 rmoveto } bind def
+/Y { 0 exch rmoveto } bind def
+/E {    findfont
+        dup maxlength dict begin
+        {
+                1 index /FID ne { def } { pop pop } ifelse
+        } forall
+        /Encoding exch def
+        dup /FontName exch def
+        currentdict end definefont pop
+} bind def
+/F {    findfont exch scalefont dup setfont
+        [ exch /setfont cvx ] cvx bind def
+} bind def
+/Vm { moveto } bind def
+/Va { newpath arcn stroke } bind def
+/Vl { moveto lineto stroke } bind def
+/Vc { newpath 0 360 arc closepath } bind def
+/Vr {   exch dup 0 rlineto
+        exch dup 0 exch rlineto
+        exch neg 0 rlineto
+        0 exch neg rlineto
+        setgray fill } bind def
+/Tm matrix def
+/Ve {   Tm currentmatrix pop
+        translate scale newpath 0 0 .5 0 360 arc closepath
+        Tm setmatrix
+} bind def
+/Vf { currentgray exch setgray fill setgray } bind def
+%%EndProlog
